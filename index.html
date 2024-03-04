@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Portland Tide</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="./_observablehq/theme-cotton.css">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&amp;display=swap" crossorigin>
+<link rel="stylesheet" type="text/css" href="./_observablehq/theme-cotton.css">
+<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&amp;display=swap" crossorigin>
+<link rel="modulepreload" href="./_observablehq/client.js">
+<link rel="modulepreload" href="./_observablehq/runtime.js">
+<link rel="modulepreload" href="./_observablehq/stdlib.js">
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/@observablehq/plot@0.6.13/+esm">
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/binary-search-bounds@2.0.5/+esm">
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/d3-array@3.2.4/+esm">
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/d3-axis@3.0.0/+esm">
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/d3-brush@3.0.0/+esm">
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/d3-chord@3.0.1/+esm">
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/d3-color@3.1.0/+esm">
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/d3-contour@4.0.2/+esm">
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/d3-delaunay@6.0.4/+esm">
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/d3-dispatch@3.0.1/+esm">
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/d3-drag@3.0.0/+esm">
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/d3-dsv@3.0.1/+esm">
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/d3-ease@3.0.1/+esm">
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/d3-fetch@3.0.1/+esm">
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/d3-force@3.0.0/+esm">
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/d3-format@3.1.0/+esm">
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/d3-geo@3.1.0/+esm">
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/d3-hierarchy@3.1.2/+esm">
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/d3-interpolate@3.0.1/+esm">
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/d3-path@3.1.0/+esm">
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/d3-polygon@3.0.1/+esm">
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/d3-quadtree@3.0.1/+esm">
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/d3-random@3.0.1/+esm">
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3.0.0/+esm">
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/d3-scale@4.0.2/+esm">
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/d3-selection@3.0.0/+esm">
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/d3-shape@3.2.0/+esm">
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/d3-time-format@4.1.0/+esm">
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/d3-time@3.1.0/+esm">
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/d3-timer@3.0.1/+esm">
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/d3-transition@3.0.1/+esm">
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/d3-zoom@3.0.0/+esm">
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/d3@7.8.5/+esm">
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/delaunator@5.0.0/+esm">
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/internmap@2.0.3/+esm">
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/interval-tree-1d@1.0.4/+esm">
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/isoformat@0.2.1/+esm">
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/robust-predicates@3.0.2/+esm">
+<script type="module">
+
+import {define} from "./_observablehq/client.js";
+
+define({id: "d66aac93", inputs: ["FileAttachment"], outputs: ["dt"], files: [{"name":"./data/tideData.csv","mimeType":"text/csv","path":"./_file/data/tideData.csv"}], body: (FileAttachment) => {
+const dt = FileAttachment("data/tideData.csv").csv({typed: true})
+return {dt};
+}});
+
+define({id: "8931983b", body: () => {
+//Inputs.table(dt)
+}});
+
+define({id: "7f1b0938", outputs: ["fdate"], body: () => {
+let fdate = "a" + new Date().toISOString().slice(0, 10).replace(/-/g,"");
+return {fdate};
+}});
+
+define({id: "b2779f10", inputs: ["dt","fdate"], outputs: ["dt_date"], body: (dt,fdate) => {
+let dt_date = dt.filter(function(dt) {
+    return dt.dateFactor == fdate; });
+return {dt_date};
+}});
+
+define({id: "b8eaf8df", body: () => {
+//Inputs.table(dt_date)
+}});
+
+define({id: "52532c88", outputs: ["today","time_min","time_max"], body: () => {
+var today = new Date()
+// Create date.  Left empty, will default to 'now'
+var time_min = new Date();
+var time_max = new Date();
+
+// Set hours
+time_min.setHours(4);
+time_min.setMinutes(0);
+time_min.setSeconds(0);
+
+time_max.setHours(21);
+time_max.setMinutes(0);
+time_max.setSeconds(0);
+return {today,time_min,time_max};
+}});
+
+define({id: "01ba4719", body: () => {
+
+}});
+
+define({id: "21dfb8db", inputs: ["Plot","dt","dt_date","display"], body: async (Plot,dt,dt_date,display) => {
+display(await(
+Plot.plot({
+  y: {
+    grid: true,
+    label: "Tide Height (m)"
+  },
+  x: {
+    type: "time",
+    //domain: [time_min, time_max],
+    grid: true,
+    nice: true,
+    //tickFormat: (d) => d.convertTZ("America/New_York")
+  },
+  marks: [
+    //Plot.ruleY([0]),
+    Plot.lineY(dt, {x: "time", y: "TideHeight", z:"dateFactor", curve: "catmull-rom",strokeWidth: 30, opacity: 0.05, stroke: "grey"}),
+    Plot.lineY(dt_date, {x: "time", y: "TideHeight", stroke: "TideHeight", z:null, curve: "catmull-rom", strokeWidth: 10}),
+    Plot.ruleX(dt_date, Plot.pointerX({x: "time", py: "TideHeight", stroke: "#1d1936", strokeWidth: 2})),
+    Plot.dot(dt_date, Plot.pointerX({x: "time", y: "TideHeight", fill: "#1d1936", stroke: "white", strokeWidth: 1, r:4})),
+    Plot.text(dt_date, Plot.pointerX({px: "time", py: "TideHeight", dy: -17, frameAnchor: "top-right", fontVariant: "tabular-nums", text: (d) => [`${d.time.toLocaleTimeString([], {year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit'})}`, `Tide Height ${d.TideHeight.toFixed(1)} m`].join("   ")}))
+  ],
+  color: {
+    type: "diverging",
+    scheme: "brbg", 
+    legend: false, 
+    pivot: 1.5, 
+    symmetric: false
+  },
+})
+))
+}});
+
+</script>
+<div id="observablehq-center">
+<main id="observablehq-main" class="observablehq">
+<div id="cell-d66aac93" class="observablehq observablehq--block"></div>
+<div id="cell-8931983b" class="observablehq observablehq--block"></div>
+<div id="cell-7f1b0938" class="observablehq observablehq--block"></div>
+<div id="cell-b2779f10" class="observablehq observablehq--block"></div>
+<div id="cell-b8eaf8df" class="observablehq observablehq--block"></div>
+<div id="cell-52532c88" class="observablehq observablehq--block"></div>
+<div id="cell-01ba4719" class="observablehq observablehq--block"></div>
+<div id="cell-21dfb8db" class="observablehq observablehq--block observablehq--loading"></div>
+</main>
+<footer id="observablehq-footer">
+<div>Built with <a href="https://observablehq.com/" target="_blank">Observable</a> on <a title="2024-03-04T15:09:28">Mar 4, 2024</a>.</div>
+</footer>
+</div>
