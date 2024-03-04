@@ -1,16 +1,16 @@
-
-lat = "43.6591"
-lon = "-70.2568"
-key = "191dbef06b4554059d0b0e17fec2e1d2"#Sys.getenv("WEATHER")
-cnt = "2"
-part = "hourly"
-units = "imperial"
-
-#print(nchar(key))
-
-url <- glue("https://api.openweathermap.org/data/3.0/onecall?lat={lat}&lon={lon}&exclude={part}&units={units}&appid={key}")
-
-weatherData <- fromJSON(url)
+# 
+# lat = "43.6591"
+# lon = "-70.2568"
+# key = #Sys.getenv("WEATHER")
+# cnt = "2"
+# part = "hourly"
+# units = "imperial"
+# 
+# #print(nchar(key))
+# 
+# url <- glue::glue("https://api.openweathermap.org/data/3.0/onecall?lat={lat}&lon={lon}&exclude={part}&units={units}&appid={key}")
+# #jsonlite::fromJSON(url)
+# weatherData <- jsonlite::fromJSON(url)
 
 #weatherData <- readRDS(file = "weatherTest.rds")
 
