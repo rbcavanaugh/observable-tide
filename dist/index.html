@@ -3,13 +3,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <title>Portland Tide</title>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="style" href="./_observablehq/theme-cotton.css">
+<link rel="preload" as="style" href="./_observablehq/theme-air,midnight.css">
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&amp;display=swap" crossorigin>
-<link rel="stylesheet" type="text/css" href="./_observablehq/theme-cotton.css">
+<link rel="preload" as="style" href="./_observablehq/stdlib/inputs.css">
+<link rel="stylesheet" type="text/css" href="./_observablehq/theme-air,midnight.css">
 <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&amp;display=swap" crossorigin>
+<link rel="stylesheet" type="text/css" href="./_observablehq/stdlib/inputs.css">
 <link rel="modulepreload" href="./_observablehq/client.js">
 <link rel="modulepreload" href="./_observablehq/runtime.js">
 <link rel="modulepreload" href="./_observablehq/stdlib.js">
+<link rel="modulepreload" href="./_observablehq/stdlib/inputs.js">
 <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/@observablehq/plot@0.6.13/+esm">
 <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/binary-search-bounds@2.0.5/+esm">
 <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/d3-array@3.2.4/+esm">
@@ -44,6 +47,7 @@
 <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/d3-zoom@3.0.0/+esm">
 <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/d3@7.8.5/+esm">
 <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/delaunator@5.0.0/+esm">
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/htl@0.3.1/+esm">
 <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/internmap@2.0.3/+esm">
 <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/interval-tree-1d@1.0.4/+esm">
 <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/isoformat@0.2.1/+esm">
@@ -52,71 +56,75 @@
 
 import {define} from "./_observablehq/client.js";
 
-define({id: "d66aac93", inputs: ["FileAttachment"], outputs: ["dt"], files: [{"name":"./data/tideData.csv","mimeType":"text/csv","path":"./_file/data/tideData.csv"}], body: (FileAttachment) => {
+define({id: "d186f39f", inline: true, inputs: ["currentDate","display"], body: async (currentDate,display) => {
+display(await(
+currentDate
+))
+}});
+
+define({id: "c5c95f28", inputs: ["FileAttachment"], outputs: ["dt"], files: [{"name":"./data/tideData.csv","mimeType":"text/csv","path":"./_file/data/tideData.csv"}], body: (FileAttachment) => {
 const dt = FileAttachment("data/tideData.csv").csv({typed: true})
+//Inputs.table(dt)
 return {dt};
 }});
 
-define({id: "8931983b", body: () => {
-//Inputs.table(dt)
-}});
-
-define({id: "7f1b0938", outputs: ["fdate"], body: () => {
-let fdate = "a" + new Date().toISOString().slice(0, 10).replace(/-/g,"");
+define({id: "de3982a3", inputs: ["counter"], outputs: ["fdate"], body: (counter) => {
+let fdate = "a" + new Date(new Date().setDate(new Date().getDate()+counter)).toISOString().slice(0, 10).replace(/-/g,"");
 return {fdate};
 }});
 
-define({id: "b2779f10", inputs: ["dt","fdate"], outputs: ["dt_date"], body: (dt,fdate) => {
+define({id: "c3e4d898", inputs: ["counter"], outputs: ["fdate_txt","daysOfWeek","dayOfWeek","options","currentDate"], body: (counter) => {
+const fdate_txt = new Date(new Date().setDate(new Date().getDate()+counter))
+const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+const dayOfWeek = daysOfWeek[fdate_txt.getDay()];
+const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+const currentDate = fdate_txt.toLocaleDateString('en-US', options);
+return {fdate_txt,daysOfWeek,dayOfWeek,options,currentDate};
+}});
+
+define({id: "af9118ff", inputs: ["dt","fdate","counter"], outputs: ["dt_date","fdate_min","fdate_max","dt_viz"], body: (dt,fdate,counter) => {
 let dt_date = dt.filter(function(dt) {
     return dt.dateFactor == fdate; });
-return {dt_date};
+
+const fdate_min = new Date(new Date().setDate(new Date().getDate()+counter-15));
+const fdate_max = new Date(new Date().setDate(new Date().getDate()+counter+15));
+
+let dt_viz = dt.filter(function(dt) {
+   return new Date(dt.DateTime) > fdate_min && new Date(dt.DateTime) < fdate_max;
+});
+return {dt_date,fdate_min,fdate_max,dt_viz};
 }});
 
-define({id: "b8eaf8df", body: () => {
-//Inputs.table(dt_date)
+define({id: "172c28a2", outputs: ["mode_opp","mode"], body: () => {
+const mode_opp = () => window?.matchMedia?.('(prefers-color-scheme:dark)')?.matches ? '#ffffff' : "#1d1936";
+const mode = () => window?.matchMedia?.('(prefers-color-scheme:dark)')?.matches ? "#1d1936" : "#ffffff";
+
+return {mode_opp,mode};
 }});
 
-define({id: "52532c88", outputs: ["today","time_min","time_max"], body: () => {
-var today = new Date()
-// Create date.  Left empty, will default to 'now'
-var time_min = new Date();
-var time_max = new Date();
-
-// Set hours
-time_min.setHours(4);
-time_min.setMinutes(0);
-time_min.setSeconds(0);
-
-time_max.setHours(21);
-time_max.setMinutes(0);
-time_max.setSeconds(0);
-return {today,time_min,time_max};
-}});
-
-define({id: "01ba4719", body: () => {
-
-}});
-
-define({id: "21dfb8db", inputs: ["Plot","dt","dt_date","display"], body: async (Plot,dt,dt_date,display) => {
+define({id: "3385e7f3", inline: true, inputs: ["Plot","dt_date","mode_opp","mode","display"], body: async (Plot,dt_date,mode_opp,mode,display) => {
 display(await(
 Plot.plot({
+    height: 650,
+    style: {fontSize: "20px"},
+    marginTop: 40,
   y: {
-    grid: true,
+    grid: false,
     label: "Tide Height (m)"
   },
   x: {
     type: "time",
-    //domain: [time_min, time_max],
-    grid: true,
+    grid: false,
     nice: true,
-    //tickFormat: (d) => d.convertTZ("America/New_York")
   },
   marks: [
+    Plot.axisX({color: "black"}),
+    Plot.axisY({color: "black"}),
     //Plot.ruleY([0]),
-    Plot.lineY(dt, {x: "time", y: "TideHeight", z:"dateFactor", curve: "catmull-rom",strokeWidth: 30, opacity: 0.05, stroke: "grey"}),
-    Plot.lineY(dt_date, {x: "time", y: "TideHeight", stroke: "TideHeight", z:null, curve: "catmull-rom", strokeWidth: 10}),
-    Plot.ruleX(dt_date, Plot.pointerX({x: "time", py: "TideHeight", stroke: "#1d1936", strokeWidth: 2})),
-    Plot.dot(dt_date, Plot.pointerX({x: "time", y: "TideHeight", fill: "#1d1936", stroke: "white", strokeWidth: 1, r:4})),
+    //Plot.lineY(dt_viz, {x: "time", y: "TideHeight", z:"dateFactor", curve: "catmull-rom",strokeWidth: 30, opacity: 0.05, stroke: "grey"}),
+    Plot.lineY(dt_date, {x: "time", y: "TideHeight", stroke: "TideHeight", z:null, curve: "catmull-rom", strokeWidth: 30}),
+    Plot.ruleX(dt_date, Plot.pointerX({x: "time", py: "TideHeight", stroke: mode_opp, strokeWidth: 2})),
+    Plot.dot(dt_date, Plot.pointerX({x: "time", y: "TideHeight", fill: mode_opp, stroke: mode, strokeWidth: 1, r:4})),
     Plot.text(dt_date, Plot.pointerX({px: "time", py: "TideHeight", dy: -17, frameAnchor: "top-right", fontVariant: "tabular-nums", text: (d) => [`${d.time.toLocaleTimeString([], {year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit'})}`, `Tide Height ${d.TideHeight.toFixed(1)} m`].join("   ")}))
   ],
   color: {
@@ -125,24 +133,108 @@ Plot.plot({
     legend: false, 
     pivot: 1.5, 
     symmetric: false
-  },
+  }
 })
+))
+}});
+
+define({id: "09fa7352", inputs: ["Inputs","Generators"], outputs: ["counterInput","counter"], body: (Inputs,Generators) => {
+const counterInput = Inputs.button([
+    ["-1 Day", value => value - 1],
+    ["Today", value => 0],
+    ["+1 Day", value => value + 1]
+    ], {value: 0});
+
+const counter = Generators.input(counterInput);
+return {counterInput,counter};
+}});
+
+define({id: "d20b9e7c", inline: true, inputs: ["counterInput","display"], body: async (counterInput,display) => {
+display(await(
+counterInput
 ))
 }});
 
 </script>
 <div id="observablehq-center">
 <main id="observablehq-main" class="observablehq">
-<div id="cell-d66aac93" class="observablehq observablehq--block"></div>
-<div id="cell-8931983b" class="observablehq observablehq--block"></div>
-<div id="cell-7f1b0938" class="observablehq observablehq--block"></div>
-<div id="cell-b2779f10" class="observablehq observablehq--block"></div>
-<div id="cell-b8eaf8df" class="observablehq observablehq--block"></div>
-<div id="cell-52532c88" class="observablehq observablehq--block"></div>
-<div id="cell-01ba4719" class="observablehq observablehq--block"></div>
-<div id="cell-21dfb8db" class="observablehq observablehq--block observablehq--loading"></div>
+<span><!-- manifest for pwa -->
+</span><link rel="manifest" href="./_file/manifest.json">
+<span><!-- Here's the css for the button. need to move to a separate file.  -->
+</span><style>
+/* CSS */
+button {
+  align-items: center;
+  background-color: var(--theme-background);
+  border: 1px solid var(--theme-foreground);
+  border-radius: .25rem;
+  box-shadow: rgba(0, 0, 0, 0.02) 0 1px 3px 0;
+  box-sizing: border-box;
+  color: rgba(0, 0, 0, 0.85);
+  cursor: pointer;
+  display: inline-flex;
+  font-family: system-ui,-apple-system,system-ui,"Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  justify-content: center;
+  line-height: 1.25;
+  margin: 0;
+  min-height: 3rem;
+  padding: calc(.875rem - 2px) calc(1.5rem - 2px);
+  position: relative;
+  text-decoration: none;
+  transition: all 250ms;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  vertical-align: baseline;
+  width: auto;
+}
+
+button:hover,
+button:focus {
+  box-shadow: rgba(0, 0, 0, 0.1) 0 4px 12px;
+}
+
+button:active {
+  background-color: var(--theme-foreground);
+  border-color: rgba(0, 0, 0, 0.15);
+  box-shadow: rgba(0, 0, 0, 0.06) 0 2px 4px;
+  color: rgba(0, 0, 0, 0.65);
+  transform: translateY(0);
+}
+</style>
+<span><!-- Title and Date -->
+</span><span><div style="justify-content: space-around; display:flex;">
+        <h2>Portland Tide</h2>
+</div>
+<div style="justify-content: space-around; display:flex; margin-bottom: 24px;">
+        <div><span id="cell-d186f39f" class="observablehq--loading"></span></div>
+</div>
+</span><span><!-- Read in the data -->
+</span><div id="cell-c5c95f28" class="observablehq observablehq--block"></div>
+<span><!-- Need to create a string variable that can separate the selected day IN EAST COAST TIME! -->
+</span><span><!-- Data comes in in EST. js doesn't like anything other than UTC. -->
+</span><div id="cell-de3982a3" class="observablehq observablehq--block"></div>
+<span><!-- annoying code to get the date selected to display at the top -->
+</span><div id="cell-c3e4d898" class="observablehq observablehq--block"></div>
+<span><!-- Create a separate dataframe using the datefactor string to select the right day to show in color -->
+</span><span><!-- also going to limit just to a +/- 15 days around the selected date -->
+</span><div id="cell-af9118ff" class="observablehq observablehq--block"></div>
+<div id="cell-172c28a2" class="observablehq observablehq--block"></div>
+<span><!-- Plot code!! -->
+</span><div style="touch-action: none;justify-content: space-around; display:flex;">
+<span id="cell-3385e7f3" class="observablehq--loading"></span>
+</div>
+<span><!-- Button for changing the day shown and the counter -->
+</span><div id="cell-09fa7352" class="observablehq observablehq--block"></div>
+<div style="justify-content: space-around; display:flex;margin-top: 24px;">
+    <div>
+        <span id="cell-d20b9e7c" class="observablehq--loading"></span>
+    </div>
+</div>
 </main>
 <footer id="observablehq-footer">
-<div>Built with <a href="https://observablehq.com/" target="_blank">Observable</a> on <a title="2024-03-04T15:09:28">Mar 4, 2024</a>.</div>
+<div>Built with <a href="https://observablehq.com/" target="_blank">Observable</a> on <a title="2024-03-05T09:59:28">Mar 5, 2024</a>.</div>
 </footer>
 </div>

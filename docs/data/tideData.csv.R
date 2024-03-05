@@ -3,28 +3,16 @@ library(ggplot2)
 library(rtide)
 library(dplyr)
 library(readr)
-library(ggpmisc)
 library(stringr)
-library(httr)
 library(glue)
-library(jsonlite)
 library(tidyr)
 library(purrr)
 library(htmltools)
-library(glue)
-
-#source("R/key.R")
-source("./docs/data/R/functions.R")
-# saveRDS(weatherData, "wd.rds")
-# saveRDS(tideData, "td.rds")
-# 
-# weatherData = readRDS("wd.rds")
-# tideData = readRDS("td.rds")
 
 tideData = rtide::tide_height(
   "Casco Bay", #
-  from = Sys.Date()-15, to = Sys.Date()+15,
-  minutes = 1L, tz =  "EST5EDT" # "UTC" #
+  from = Sys.Date()-15, to = Sys.Date()+75,
+  minutes = 10L, tz =  "EST5EDT" # "UTC" #
 ) %>%
   tidyr::separate(DateTime, c("date", "time"), sep = " ", remove = F) %>%
   mutate(
@@ -38,8 +26,5 @@ tideData = rtide::tide_height(
          ) %>%
     filter(hour(time)> 2 & hour(time) < 21)
 
-
-#getTideData()
-#print(head(tideData))
 cat(format_csv(tideData))
 
