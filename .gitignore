@@ -1,5 +1,0 @@
-.DS_Store
-docs/.observablehq/cache/
-node_modules/
-yarn-error.log
-**/key*

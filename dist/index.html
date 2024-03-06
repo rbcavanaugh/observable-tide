@@ -102,27 +102,25 @@ const mode = () => window?.matchMedia?.('(prefers-color-scheme:dark)')?.matches 
 return {mode_opp,mode};
 }});
 
-define({id: "3385e7f3", inline: true, inputs: ["Plot","dt_date","mode_opp","mode","display"], body: async (Plot,dt_date,mode_opp,mode,display) => {
+define({id: "d2298f19", inline: true, inputs: ["Plot","dt_viz","dt_date","mode_opp","mode","display"], body: async (Plot,dt_viz,dt_date,mode_opp,mode,display) => {
 display(await(
 Plot.plot({
-    height: 650,
+    height: 700,
     style: {fontSize: "20px"},
     marginTop: 40,
   y: {
-    grid: false,
+    grid: true,
     label: "Tide Height (m)"
   },
   x: {
     type: "time",
-    grid: false,
+    grid: true,
     nice: true,
   },
   marks: [
-    Plot.axisX({color: "black"}),
-    Plot.axisY({color: "black"}),
     //Plot.ruleY([0]),
-    //Plot.lineY(dt_viz, {x: "time", y: "TideHeight", z:"dateFactor", curve: "catmull-rom",strokeWidth: 30, opacity: 0.05, stroke: "grey"}),
-    Plot.lineY(dt_date, {x: "time", y: "TideHeight", stroke: "TideHeight", z:null, curve: "catmull-rom", strokeWidth: 30}),
+    Plot.lineY(dt_viz, {x: "time", y: "TideHeight", z:"dateFactor", curve: "catmull-rom",strokeWidth: 30, opacity: 0.05, stroke: "grey"}),
+    Plot.lineY(dt_date, {x: "time", y: "TideHeight", stroke: "TideHeight", z:null, curve: "catmull-rom", strokeWidth: 10}),
     Plot.ruleX(dt_date, Plot.pointerX({x: "time", py: "TideHeight", stroke: mode_opp, strokeWidth: 2})),
     Plot.dot(dt_date, Plot.pointerX({x: "time", y: "TideHeight", fill: mode_opp, stroke: mode, strokeWidth: 1, r:4})),
     Plot.text(dt_date, Plot.pointerX({px: "time", py: "TideHeight", dy: -17, frameAnchor: "top-right", fontVariant: "tabular-nums", text: (d) => [`${d.time.toLocaleTimeString([], {year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit'})}`, `Tide Height ${d.TideHeight.toFixed(1)} m`].join("   ")}))
@@ -158,8 +156,11 @@ counterInput
 </script>
 <div id="observablehq-center">
 <main id="observablehq-main" class="observablehq">
-<span><!-- manifest for pwa -->
-</span><link rel="manifest" href="./_file/manifest.json">
+<head>
+<link rel="apple-touch-icon" sizes="180x180" href="https://github.com/rbcavanaugh/observable-tide/blob/main/icon/apple-touch-icon.png?raw=true">
+<link rel="icon" type="image/png" sizes="32x32" href="https://github.com/rbcavanaugh/observable-tide/blob/main/icon/favicon-32x32.png?raw=true">
+<link rel="icon" type="image/png" sizes="16x16" href="https://github.com/rbcavanaugh/observable-tide/blob/main/icon/favicon-16x16.png?raw=true">
+</head>
 <span><!-- Here's the css for the button. need to move to a separate file.  -->
 </span><style>
 /* CSS */
@@ -224,7 +225,7 @@ button:active {
 <div id="cell-172c28a2" class="observablehq observablehq--block"></div>
 <span><!-- Plot code!! -->
 </span><div style="touch-action: none;justify-content: space-around; display:flex;">
-<span id="cell-3385e7f3" class="observablehq--loading"></span>
+<span id="cell-d2298f19" class="observablehq--loading"></span>
 </div>
 <span><!-- Button for changing the day shown and the counter -->
 </span><div id="cell-09fa7352" class="observablehq observablehq--block"></div>
@@ -235,6 +236,6 @@ button:active {
 </div>
 </main>
 <footer id="observablehq-footer">
-<div>Built with <a href="https://observablehq.com/" target="_blank">Observable</a> on <a title="2024-03-05T09:59:28">Mar 5, 2024</a>.</div>
+<div>Built with <a href="https://observablehq.com/" target="_blank">Observable</a> on <a title="2024-03-05T21:15:54">Mar 5, 2024</a>.</div>
 </footer>
 </div>
