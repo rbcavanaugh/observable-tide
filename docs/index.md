@@ -4,9 +4,9 @@ theme: [air, midnight]
 ---
 
 <head>
-<link rel="apple-touch-icon" sizes="180x180" href="https://github.com/rbcavanaugh/observable-tide/blob/main/icon/apple-touch-icon.png?raw=true">
-<link rel="icon" type="image/png" sizes="32x32" href="https://github.com/rbcavanaugh/observable-tide/blob/main/icon/favicon-32x32.png?raw=true">
-<link rel="icon" type="image/png" sizes="16x16" href="https://github.com/rbcavanaugh/observable-tide/blob/main/icon/favicon-16x16.png?raw=true">
+    <link rel="apple-touch-icon" href="https://github.com/rbcavanaugh/observable-tide/blob/main/icon/apple-touch-icon.png?raw=true">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://github.com/rbcavanaugh/observable-tide/blob/main/icon/favicon-32x32.png?raw=true">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://github.com/rbcavanaugh/observable-tide/blob/main/icon/favicon-16x16.png?raw=true">
 </head>
 
 <!-- Here's the css for the button. need to move to a separate file.  -->
