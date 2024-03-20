@@ -51,3 +51,10 @@ A typical Framework project looks like this:
 | `npm run deploy`     | Deploy your project to Observable                        |
 | `npm run clean`      | Clear the local data loader cache                        |
 | `npm run observable` | Run commands like `observable help`                      |
+
+## To get PWA to work
+
+- npm run build
+- copy service-worker.js to root of dist
+- copy favicon144 to _file folder
+- edit service-worker.js to cache hashed file names

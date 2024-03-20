@@ -25,6 +25,7 @@ const PRECACHE_URLS = [
   '_file/favicon/apple-touch-icon.567a8b5a.png',
   '_file/qr.90ea748c.png'
 ];
+
 // The install handler takes care of precaching the resources we always need.
 self.addEventListener('install', event => {
   event.waitUntil(
