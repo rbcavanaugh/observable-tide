@@ -1,0 +1,17 @@
+{
+  "name": "Portland Tide",
+  "short_name": "Portland Tide",
+  "description": "A simple PWA to view Portland, ME tide charts",
+  "lang": "en-US",
+  "start_url": "https://robcavanaugh.observablehq.cloud/portland-tide/",
+  "display": "fullscreen",
+  "background_color": "#0d0d0d",
+  "theme_color": "#0d0d0d",
+  "icons": [
+    {
+      "src": "./favicon-144x144.png",
+      "type": "image/png",
+      "sizes": "144x144"
+    }
+  ]
+}

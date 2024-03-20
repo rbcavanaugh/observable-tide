@@ -3,11 +3,16 @@ toc: false
 theme: [air, midnight]
 ---
 
-<head>
-    <link rel="apple-touch-icon" href="https://github.com/rbcavanaugh/observable-tide/blob/main/icon/apple-touch-icon.png?raw=true">
-    <link rel="icon" type="image/png" sizes="32x32" href="https://github.com/rbcavanaugh/observable-tide/blob/main/icon/favicon-32x32.png?raw=true">
-    <link rel="icon" type="image/png" sizes="16x16" href="https://github.com/rbcavanaugh/observable-tide/blob/main/icon/favicon-16x16.png?raw=true">
-</head>
+<script>
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", function() {
+      navigator.serviceWorker
+        .register("service-worker.js")
+        .then(res => console.log("service worker registered"))
+        .catch(err => console.log("service worker not registered", err))
+    })
+  }
+</script>
 
 <!-- Here's the css for the button. need to move to a separate file.  -->
 <style>
@@ -51,6 +56,10 @@ button:active {
   box-shadow: rgba(0, 0, 0, 0.06) 0 2px 4px;
   color: rgba(0, 0, 0, 0.65);
   transform: translateY(0);
+}
+::backdrop {
+  background-color: grey;
+  opacity: 0.25;
 }
 </style>
 
@@ -154,11 +163,42 @@ const counterInput = Inputs.button([
 const counter = Generators.input(counterInput);
 ```
 
-<div style="justify-content: space-around; display:flex;margin-top: 24px;">
-    <div>
-        ${counterInput}
-    </div>
+<div>
+  <div style="justify-content: space-around; display:flex;margin-top: 24px;">
+      <div>
+          ${counterInput}
+      </div>
+  </div>
 </div>
+
+
+```js
+// const clicksInput = Inputs.button("Click me", {value: null, reduce: () => navigator.clipboard.writeText(time)});
+// const clicks = Generators.input(clicksInput);
+
+const dialog = document.querySelector("dialog");
+const showButton = document.querySelector("dialog + button");
+const closeButton = document.querySelector("dialog button");
+
+// "Show the dialog" button opens the dialog modally
+showButton.addEventListener("click", () => {
+  dialog.showModal();
+});
+
+// "Close" button closes the dialog
+closeButton.addEventListener("click", () => {
+  dialog.close();
+});
+```
+
+<dialog>
+  <img style="width:80%;display:block;margin:0 auto 24px auto;"src="qr.png">
+  <button autofocus style="display:block;margin: 0 auto;color:var(--theme-foreground); font-weight:400; font-size:14px;" >Close</button>
+</dialog>
+<button style="display:block;margin: 48px auto 0 auto; color:var(--theme-foreground); font-weight:400; font-size:14px;">Share</button>
+
+
+
 
 
 
