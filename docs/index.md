@@ -176,26 +176,38 @@ const counter = Generators.input(counterInput);
 // const clicksInput = Inputs.button("Click me", {value: null, reduce: () => navigator.clipboard.writeText(time)});
 // const clicks = Generators.input(clicksInput);
 
-const dialog = document.querySelector("dialog");
-const showButton = document.querySelector("dialog + button");
-const closeButton = document.querySelector("dialog button");
+// const dialog = document.querySelector("dialog");
+// const showButton = document.querySelector("dialog + button");
+// const closeButton = document.querySelector("dialog button");
+// 
+// // "Show the dialog" button opens the dialog modally
+// showButton.addEventListener("click", () => {
+//   dialog.showModal();
+// });
+// 
+// // "Close" button closes the dialog
+// closeButton.addEventListener("click", () => {
+//   dialog.close();
+// });
 
-// "Show the dialog" button opens the dialog modally
-showButton.addEventListener("click", () => {
-  dialog.showModal();
-});
-
-// "Close" button closes the dialog
-closeButton.addEventListener("click", () => {
-  dialog.close();
+const buttonEl = document.querySelector("button");
+const statusEl = document.querySelector(".status");
+buttonEl.addEventListener("click", async () => {
+  try {
+    await navigator.share({
+      title: "Portland Tide",
+      url: "https://robcavanaugh.observablehq.cloud/portland-tide/",
+    });
+    statusEl.textContent = "Data was shared successfully";
+  } catch (err) {
+    statusEl.textContent = `${err.message}`;
+  }
 });
 ```
 
-<dialog>
-  <img style="width:80%;display:block;margin:0 auto 24px auto;"src="qr.png">
-  <button autofocus style="display:block;margin: 0 auto;color:var(--theme-foreground); font-weight:400; font-size:14px;" >Close</button>
-</dialog>
-<button style="display:block;margin: 48px auto 0 auto; color:var(--theme-foreground); font-weight:400; font-size:14px;">Share</button>
+<div>
+<button style="display:block;margin: 48px auto 0 auto; color:var(--theme-foreground); font-weight:400; font-size:14px;" class="share-btn">Share</button>
+</div>
 
 
 

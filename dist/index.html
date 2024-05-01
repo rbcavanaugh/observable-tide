@@ -52,13 +52,13 @@
 <link rel="modulepreload" href="./_npm/internmap@2.0.3/_esm.js">
 <link rel="modulepreload" href="./_npm/delaunator@5.0.1/_esm.js">
 <link rel="modulepreload" href="./_npm/robust-predicates@3.0.2/_esm.js">
-<link rel="apple-touch-icon" href="./_file/favicon/apple-touch-icon.567a8b5a.png"><link rel="icon" type="image/png" sizes="32x32" href="./_file/favicon/favicon-32x32.4ac38666.png"><link rel="icon" type="image/png" sizes="16x16" href="./_file/favicon/favicon-16x16.f0ac5f2e.png"><link rel="manifest" href="./_file/manifest.82cce30c.json"><link rel="manifest" href="./_file/favicon/site.310b8694.webmanifest"><link rel="mask-icon" href="./_file/favicon/safari-pinned-tab.20744b15.svg" color="#5bbad5"><meta name="msapplication-TileColor" content="#da532c"><meta name="theme-color" content="#0d0d0d">
+<link rel="apple-touch-icon" href="./_file/favicon/apple-touch-icon.567a8b5a.png"><link rel="stylesheet" href="https://www.w3.org/Style/CSS/Icons/24x24.css"><link rel="icon" type="image/png" sizes="32x32" href="./_file/favicon/favicon-32x32.4ac38666.png"><link rel="icon" type="image/png" sizes="16x16" href="./_file/favicon/favicon-16x16.f0ac5f2e.png"><link rel="manifest" href="./_file/manifest.d4ecc35b.json"><link rel="manifest" href="./_file/favicon/site.310b8694.webmanifest"><link rel="mask-icon" href="./_file/favicon/safari-pinned-tab.20744b15.svg" color="#5bbad5"><meta name="msapplication-TileColor" content="#da532c"><meta name="theme-color" content="#0d0d0d">
 <script type="module">
 
 import {define} from "./_observablehq/client.js";
 import {registerFile} from "./_observablehq/stdlib.js";
 
-registerFile("./data/tideData.csv", {"name":"./data/tideData.csv","mimeType":"text/csv","path":"./_file/data/tideData.06a29d9f.csv","lastModified":1709608738380});
+registerFile("./data/tideData.csv", {"name":"./data/tideData.csv","mimeType":"text/csv","path":"./_file/data/tideData.bc4dd0b2.csv","lastModified":1714526568546});
 
 define({id: "d186f39f", inline: true, inputs: ["currentDate","display"], body: async (currentDate,display) => {
 display(await(
@@ -157,24 +157,38 @@ counterInput
 ))
 }});
 
-define({id: "017a0b34", outputs: ["dialog","showButton","closeButton"], body: () => {
+define({id: "93a0baf0", outputs: ["buttonEl","statusEl"], body: () => {
 // const clicksInput = Inputs.button("Click me", {value: null, reduce: () => navigator.clipboard.writeText(time)});
 // const clicks = Generators.input(clicksInput);
 
-const dialog = document.querySelector("dialog");
-const showButton = document.querySelector("dialog + button");
-const closeButton = document.querySelector("dialog button");
+// const dialog = document.querySelector("dialog");
+// const showButton = document.querySelector("dialog + button");
+// const closeButton = document.querySelector("dialog button");
+// 
+// // "Show the dialog" button opens the dialog modally
+// showButton.addEventListener("click", () => {
+//   dialog.showModal();
+// });
+// 
+// // "Close" button closes the dialog
+// closeButton.addEventListener("click", () => {
+//   dialog.close();
+// });
 
-// "Show the dialog" button opens the dialog modally
-showButton.addEventListener("click", () => {
-  dialog.showModal();
+const buttonEl = document.querySelector("button");
+const statusEl = document.querySelector(".status");
+buttonEl.addEventListener("click", async () => {
+  try {
+    await navigator.share({
+      title: "Portland Tide",
+      url: "https://robcavanaugh.observablehq.cloud/portland-tide/",
+    });
+    statusEl.textContent = "Data was shared successfully";
+  } catch (err) {
+    statusEl.textContent = `${err.message}`;
+  }
 });
-
-// "Close" button closes the dialog
-closeButton.addEventListener("click", () => {
-  dialog.close();
-});
-return {dialog,showButton,closeButton};
+return {buttonEl,statusEl};
 }});
 
 </script>
@@ -269,14 +283,12 @@ button:active {
       </div>
   </div>
 </div>
-<div id="cell-017a0b34" class="observablehq observablehq--block"></div>
-<dialog>
-  <img style="width:80%;display:block;margin:0 auto 24px auto;" src="./_file/qr.90ea748c.png">
-  <button autofocus="" style="display:block;margin: 0 auto;color:var(--theme-foreground); font-weight:400; font-size:14px;">Close</button>
-</dialog>
-<button style="display:block;margin: 48px auto 0 auto; color:var(--theme-foreground); font-weight:400; font-size:14px;">Share</button>
+<div id="cell-93a0baf0" class="observablehq observablehq--block"></div>
+<div>
+<button style="display:block;margin: 48px auto 0 auto; color:var(--theme-foreground); font-weight:400; font-size:14px;" class="share-btn">Share</button>
+</div>
 </main>
 <footer id="observablehq-footer">
-<div>Built with <a href="https://observablehq.com/" target="_blank">Observable</a> on <a title="2024-03-19T23:23:39">Mar 19, 2024</a>.</div>
+<div>Built with <a href="https://observablehq.com/" target="_blank">Observable</a> on <a title="2024-04-30T21:27:05">Apr 30, 2024</a>.</div>
 </footer>
 </div>
