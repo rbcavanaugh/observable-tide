@@ -182,11 +182,17 @@ let dt_viz = dt.filter(function(dt) {
    return new Date(dt.DateTime) > fdate_min && new Date(dt.DateTime) < fdate_max;
 });
 
-// The "time" field holds only a time-of-day (same reference date for every
-// row), so anchor the x-axis to that day's midnight-to-midnight span instead
-// of letting Plot derive/"nice" a domain from the trimmed (3am-9pm) data.
-const dayStart = new Date(new Date(dt_viz[0].time).setHours(0, 0, 0, 0));
-const dayEnd = new Date(dayStart.getTime() + 24 * 60 * 60 * 1000);
+// The x-axis should span the time-of-day range present in the data. The R
+// loader pulls a bit of buffer before/after the 3am-9pm window we care about
+// (currently 2am-10pm) so ticks like "3 AM"/"9 PM" have real data on both
+// sides instead of sitting right at the plot's edge. Computed directly from
+// dt_viz instead of letting Plot's "nice" derive/round its own domain.
+let domainMin = dt_viz[0].time;
+let domainMax = dt_viz[0].time;
+for (const d of dt_viz) {
+  if (d.time < domainMin) domainMin = d.time;
+  if (d.time > domainMax) domainMax = d.time;
+}
 ```
 
 ```js
@@ -202,6 +208,8 @@ ${Plot.plot({
     height: 700,
     style: {fontSize: "20px"},
     marginTop: 40,
+    marginLeft: 60,
+    marginBottom: 50,
   y: {
     grid: true,
     label: "Tide Height (m)"
@@ -209,10 +217,11 @@ ${Plot.plot({
   x: {
     type: "time",
     grid: true,
-    domain: [dayStart, dayEnd],
-    // Without this, d3's time-tick formatter switches to showing the date
-    // (e.g. "Sept 27") instead of the time whenever a tick lands exactly on
-    // a day boundary — which both edges of a midnight-to-midnight domain do.
+    domain: [domainMin, domainMax],
+    // Force every tick (including the first) to show only the time, never
+    // the date — d3's default time-axis formatter otherwise stamps the date
+    // on whichever tick starts a new calendar day, which was showing up as
+    // stray/overlapping text at the edge of the chart.
     tickFormat: "%-I %p",
   },
   marks: [

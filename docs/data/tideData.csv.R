@@ -20,7 +20,7 @@ tideData = rtide::tide_height(
          dateFactor = paste0("a",str_remove_all(as.character(date), "-"))#,
          #tideColor = TideHeight
          ) %>%
-    filter(hour(time)> 2 & hour(time) < 21)
+    filter(hour(time) >= 2 & hour(time) <= 21)
 
 cat(format_csv(tideData))
 

@@ -56,13 +56,13 @@
 <link rel="modulepreload" href="./_npm/internmap@2.0.3/af036d7e.js">
 <link rel="modulepreload" href="./_npm/delaunator@5.1.0/7b06abe7.js">
 <link rel="modulepreload" href="./_npm/robust-predicates@3.0.3/b42f30a7.js">
-<link rel="apple-touch-icon" href="./_file/favicon/apple-touch-icon.567a8b5a.png"><link rel="stylesheet" href="https://www.w3.org/Style/CSS/Icons/24x24.css"><link rel="icon" type="image/png" sizes="32x32" href="./_file/favicon/favicon-32x32.4ac38666.png"><link rel="icon" type="image/png" sizes="16x16" href="./_file/favicon/favicon-16x16.f0ac5f2e.png"><link rel="manifest" href="./_file/manifest.4c248486.json"><link rel="manifest" href="./_file/favicon/site.310b8694.webmanifest"><link rel="mask-icon" href="./_file/favicon/safari-pinned-tab.20744b15.svg" color="#5bbad5"><meta name="msapplication-TileColor" content="#da532c"><meta name="theme-color" content="#0d0d0d">
+<link rel="apple-touch-icon" href="./_file/favicon/apple-touch-icon.567a8b5a.png"><link rel="stylesheet" href="https://www.w3.org/Style/CSS/Icons/24x24.css"><link rel="icon" type="image/png" sizes="32x32" href="./_file/favicon/favicon-32x32.4ac38666.png"><link rel="icon" type="image/png" sizes="16x16" href="./_file/favicon/favicon-16x16.f0ac5f2e.png"><link rel="manifest" href="./_file/manifest.ef4dc349.json"><link rel="manifest" href="./_file/favicon/site.310b8694.webmanifest"><link rel="mask-icon" href="./_file/favicon/safari-pinned-tab.20744b15.svg" color="#5bbad5"><meta name="msapplication-TileColor" content="#da532c"><meta name="theme-color" content="#0d0d0d">
 <script type="module">
 
 import {define} from "./_observablehq/client.12bd594f.js";
 import {registerFile} from "./_observablehq/stdlib.f2fdcb5e.js";
 
-registerFile("./data/tideData.csv", {"name":"./data/tideData.csv","mimeType":"text/csv","path":"./_file/data/tideData.51139642.csv","lastModified":1790516949205,"size":5881847});
+registerFile("./data/tideData.csv", {"name":"./data/tideData.csv","mimeType":"text/csv","path":"./_file/data/tideData.5a2b245a.csv","lastModified":1790522156380,"size":6534087});
 
 define({id: "d186f39f", mode: "inline", inputs: ["currentDate","display"], body: async (currentDate,display) => {
 display(await(
@@ -164,7 +164,7 @@ const currentDate = fdate_txt.toLocaleDateString('en-US', options);
 return {fdate_txt,daysOfWeek,dayOfWeek,options,currentDate};
 }});
 
-define({id: "af9118ff", inputs: ["dt","fdate","counter"], outputs: ["dt_date","fdate_min","fdate_max","dt_viz"], body: (dt,fdate,counter) => {
+define({id: "bf97d62a", inputs: ["dt","fdate","counter"], outputs: ["dt_date","fdate_min","fdate_max","dt_viz","domainMin","domainMax"], body: (dt,fdate,counter) => {
 let dt_date = dt.filter(function(dt) {
     return dt.dateFactor == fdate; });
 
@@ -174,7 +174,19 @@ const fdate_max = new Date(new Date().setDate(new Date().getDate()+counter+15));
 let dt_viz = dt.filter(function(dt) {
    return new Date(dt.DateTime) > fdate_min && new Date(dt.DateTime) < fdate_max;
 });
-return {dt_date,fdate_min,fdate_max,dt_viz};
+
+// The x-axis should span the time-of-day range present in the data. The R
+// loader pulls a bit of buffer before/after the 3am-9pm window we care about
+// (currently 2am-10pm) so ticks like "3 AM"/"9 PM" have real data on both
+// sides instead of sitting right at the plot's edge. Computed directly from
+// dt_viz instead of letting Plot's "nice" derive/round its own domain.
+let domainMin = dt_viz[0].time;
+let domainMax = dt_viz[0].time;
+for (const d of dt_viz) {
+  if (d.time < domainMin) domainMin = d.time;
+  if (d.time > domainMax) domainMax = d.time;
+}
+return {dt_date,fdate_min,fdate_max,dt_viz,domainMin,domainMax};
 }});
 
 define({id: "172c28a2", outputs: ["mode_opp","mode"], body: () => {
@@ -184,12 +196,14 @@ const mode = () => window?.matchMedia?.('(prefers-color-scheme:dark)')?.matches 
 return {mode_opp,mode};
 }});
 
-define({id: "d2298f19", mode: "inline", inputs: ["Plot","dt_viz","dt_date","mode_opp","mode","display"], body: async (Plot,dt_viz,dt_date,mode_opp,mode,display) => {
+define({id: "d03063ff", mode: "inline", inputs: ["Plot","domainMin","domainMax","dt_viz","dt_date","mode_opp","mode","display"], body: async (Plot,domainMin,domainMax,dt_viz,dt_date,mode_opp,mode,display) => {
 display(await(
 Plot.plot({
     height: 700,
     style: {fontSize: "20px"},
     marginTop: 40,
+    marginLeft: 60,
+    marginBottom: 50,
   y: {
     grid: true,
     label: "Tide Height (m)"
@@ -197,7 +211,12 @@ Plot.plot({
   x: {
     type: "time",
     grid: true,
-    nice: true,
+    domain: [domainMin, domainMax],
+    // Force every tick (including the first) to show only the time, never
+    // the date — d3's default time-axis formatter otherwise stamps the date
+    // on whichever tick starts a new calendar day, which was showing up as
+    // stray/overlapping text at the edge of the chart.
+    tickFormat: "%-I %p",
   },
   marks: [
     //Plot.ruleY([0]),
@@ -235,7 +254,7 @@ counterInput
 ))
 }});
 
-define({id: "93a0baf0", outputs: ["buttonEl","statusEl"], body: () => {
+define({id: "f0580bcf", outputs: ["buttonEl","statusEl"], body: () => {
 // const clicksInput = Inputs.button("Click me", {value: null, reduce: () => navigator.clipboard.writeText(time)});
 // const clicks = Generators.input(clicksInput);
 
@@ -259,7 +278,7 @@ buttonEl.addEventListener("click", async () => {
   try {
     await navigator.share({
       title: "Portland Tide",
-      url: "https://robcavanaugh.observablehq.cloud/portland-tide/",
+      url: "https://rbcavanaugh.github.io/observable-tide/",
     });
     statusEl.textContent = "Data was shared successfully";
   } catch (err) {
@@ -351,11 +370,11 @@ button:active {
 <div class="observablehq observablehq--block"><!--:c3e4d898:--></div>
 <!-- Create a separate dataframe using the datefactor string to select the right day to show in color -->
 <!-- also going to limit just to a +/- 15 days around the selected date -->
-<div class="observablehq observablehq--block"><!--:af9118ff:--></div>
+<div class="observablehq observablehq--block"><!--:bf97d62a:--></div>
 <div class="observablehq observablehq--block"><!--:172c28a2:--></div>
 <!-- Plot code!! -->
 <div style="touch-action: none;justify-content: space-around; display:flex;">
-<observablehq-loading></observablehq-loading><!--:d2298f19:-->
+<observablehq-loading></observablehq-loading><!--:d03063ff:-->
 </div>
 <!-- Button for changing the day shown and the counter -->
 <div class="observablehq observablehq--block"><!--:09fa7352:--></div>
@@ -366,13 +385,13 @@ button:active {
       </div>
   </div>
 </div>
-<div class="observablehq observablehq--block"><!--:93a0baf0:--></div>
+<div class="observablehq observablehq--block"><!--:f0580bcf:--></div>
 <div>
 <button style="display:block;margin: 48px auto 0 auto; color:var(--theme-foreground); font-weight:400; font-size:14px;" class="share-btn">Share</button>
 </div>
 </main>
 <footer id="observablehq-footer">
-<div>Built with <a href="https://observablehq.com/" target="_blank" rel="noopener noreferrer">Observable</a> on <a title="2026-09-27T09:49:21">Sep 27, 2026</a>.</div>
+<div>Built with <a href="https://observablehq.com/" target="_blank" rel="noopener noreferrer">Observable</a> on <a title="2026-09-27T11:15:19">Sep 27, 2026</a>.</div>
 </footer>
 </div>
 </body>
