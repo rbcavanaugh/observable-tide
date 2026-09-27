@@ -205,14 +205,15 @@ const mode = () => window?.matchMedia?.('(prefers-color-scheme:dark)')?.matches 
 
 <div style="touch-action: none;justify-content: space-around; display:flex;">
 ${Plot.plot({
-    height: 700,
+    height: 770,
     style: {fontSize: "20px"},
     marginTop: 40,
     marginLeft: 60,
     marginBottom: 50,
   y: {
     grid: true,
-    label: "Tide Height (m)"
+    label: "Tide Height (m)",
+    domain: [-0.4, 3.6]
   },
   x: {
     type: "time",
