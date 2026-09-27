@@ -17,7 +17,7 @@ tideData = rtide::tide_height(
          est_date = as.Date(est_time),
          time = hms::as_hms(time),
          time = if_else(is.na(time), hms::hms(0, 0, 0), time),
-         time = as.POSIXct(paste(Sys.Date(), time)),
+         time = as.POSIXct(paste(Sys.Date(), time), tz = "America/New_York"),
          dateFactor = paste0("a",str_remove_all(as.character(date), "-"))#,
          #tideColor = TideHeight
          ) %>%
