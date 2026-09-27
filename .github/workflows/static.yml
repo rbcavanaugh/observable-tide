@@ -4,6 +4,9 @@ name: Deploy static content to Pages
 on:
   push:
     branches: ["main"]
+  schedule:
+    # Runs Jan 1 each year at midnight UTC
+    - cron: '0 0 1 1 *'
   workflow_dispatch:
 
 permissions:
