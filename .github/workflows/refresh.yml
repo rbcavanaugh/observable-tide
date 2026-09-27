@@ -1,6 +1,8 @@
 name: Refresh tide data
 
 on:
+  push:
+    branches: [main]
   schedule:
     # Runs Jan 1 and Jul 1 at midnight UTC
     - cron: '0 0 1 1,7 *'
