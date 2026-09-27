@@ -181,6 +181,12 @@ const fdate_max = new Date(new Date().setDate(new Date().getDate()+counter+15));
 let dt_viz = dt.filter(function(dt) {
    return new Date(dt.DateTime) > fdate_min && new Date(dt.DateTime) < fdate_max;
 });
+
+// The "time" field holds only a time-of-day (same reference date for every
+// row), so anchor the x-axis to that day's midnight-to-midnight span instead
+// of letting Plot derive/"nice" a domain from the trimmed (3am-9pm) data.
+const dayStart = new Date(new Date(dt_viz[0].time).setHours(0, 0, 0, 0));
+const dayEnd = new Date(dayStart.getTime() + 24 * 60 * 60 * 1000);
 ```
 
 ```js
@@ -203,7 +209,11 @@ ${Plot.plot({
   x: {
     type: "time",
     grid: true,
-    nice: true,
+    domain: [dayStart, dayEnd],
+    // Without this, d3's time-tick formatter switches to showing the date
+    // (e.g. "Sept 27") instead of the time whenever a tick lands exactly on
+    // a day boundary — which both edges of a midnight-to-midnight domain do.
+    tickFormat: "%-I %p",
   },
   marks: [
     //Plot.ruleY([0]),
