@@ -270,7 +270,7 @@ buttonEl.addEventListener("click", async () => {
   try {
     await navigator.share({
       title: "Portland Tide",
-      url: "https://robcavanaugh.observablehq.cloud/portland-tide/",
+      url: "https://rbcavanaugh.github.io/observable-tide/",
     });
     statusEl.textContent = "Data was shared successfully";
   } catch (err) {
