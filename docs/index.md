@@ -213,7 +213,7 @@ ${Plot.plot({
   y: {
     grid: true,
     label: "Tide Height (m)",
-    domain: [-0.4, 3.6]
+    domain: [-0.6, 3.6]
   },
   x: {
     type: "time",
