@@ -3,10 +3,7 @@ library(rtide)
 library(dplyr)
 library(readr)
 library(stringr)
-library(glue)
 library(tidyr)
-library(purrr)
-library(htmltools)
 
 tideData = rtide::tide_height(
   "Casco Bay", #

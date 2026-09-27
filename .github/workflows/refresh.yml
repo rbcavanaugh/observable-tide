@@ -31,8 +31,7 @@ jobs:
       - name: Install R packages
         run: |
           Rscript -e 'install.packages(c(
-            "lubridate", "rtide", "dplyr", "readr",
-            "stringr", "glue", "tidyr", "purrr"
+            "lubridate", "rtide", "dplyr", "readr", "stringr", "tidyr"
           ))'
 
       - name: Set up Node.js
