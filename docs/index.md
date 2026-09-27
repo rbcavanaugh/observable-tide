@@ -4,14 +4,14 @@ theme: [air, midnight]
 ---
 
 <script>
-  if ("serviceWorker" in navigator) {
-    window.addEventListener("load", function() {
-      navigator.serviceWorker
-        .register("service-worker.js")
-        .then(res => console.log("service worker registered"))
-        .catch(err => console.log("service worker not registered", err))
-    })
-  }
+//  if ("serviceWorker" in navigator) {
+//    window.addEventListener("load", function() {
+//      navigator.serviceWorker
+//        .register("service-worker.js")
+//        .then(res => console.log("service worker registered"))
+//        .catch(err => console.log("service worker not registered", err))
+//    })
+//  }
 </script>
 
 <!-- Here's the css for the button. need to move to a separate file.  -->
@@ -72,10 +72,84 @@ button:active {
         <div>${currentDate}</div>
 </div>
 
+```js
+//import markdown-it from 'npm:markdown-it';
+import PullToRefresh from 'npm:pulltorefreshjs';
+const ptr = PullToRefresh.init({
+  mainElement: 'body',
+  onRefresh() {
+    window.location.reload();
+  }
+});
+```
+
+
 <!-- Read in the data -->
 ```js
 const dt = FileAttachment("data/tideData.csv").csv({typed: true})
 //Inputs.table(dt)
+```
+
+```js
+// Import the required libraries
+//import { html } from "htl"
+
+// Function to fetch and parse the HTML
+// async function fetchHTML(url) {
+//   const response = await fetch(url);
+//   const text = await response.text();
+//   const parser = new DOMParser();
+//   return parser.parseFromString(text, "text/html");
+// }
+
+// Function to scrape the table
+//async function scrapeTable() {
+//  const url = "https://apps.web.maine.gov/online/healthy_beaches/public/status-table.html";
+//  const doc = await fetchHTML(url);
+//  
+//  // Find the table
+//  const table = doc.querySelector("#DataTables_Table_0");
+//  
+//  if (!table) {
+//    throw new Error("Table not found");
+//  }
+//
+//  // Get headers
+//  const headers = Array.from(table.querySelectorAll("th")).map(th => th.textContent.trim());
+//
+//  // Get rows
+//  const rows = Array.from(table.querySelectorAll("tbody tr"));
+//
+//  // Parse data
+//  return rows.map(row => {
+//    const cells = Array.from(row.querySelectorAll("td"));
+//    return Object.fromEntries(
+//      headers.map((header, index) => [header, cells[index]?.textContent.trim() || ""])
+//    );
+//  });
+//}
+
+// Scrape the data
+//const scrapedData = await scrapeTable()
+
+// Display the data in a formatted table
+// const displayTable = html`<table>
+//   <thead>
+//     <tr>${Object.keys(scrapedData[0]).map(key => html`<th>${key}</th>`)}</tr>
+//   </thead>
+//   <tbody>
+//     ${scrapedData.map(row => html`
+//       <tr>${Object.values(row).map(value => html`<td>${value}</td>`)}</tr>
+//     `)}
+//   </tbody>
+// </table>`
+// 
+// // Display the table
+// displayTable
+```
+
+```js
+//scrapedData
 ```
 
 <!-- Need to create a string variable that can separate the selected day IN EAST COAST TIME! -->

@@ -11,7 +11,9 @@
   "dependencies": {
     "@observablehq/framework": "latest",
     "d3-dsv": "^3.0.1",
-    "d3-time-format": "^4.1.0"
+    "d3-time-format": "^4.1.0",
+    "esbuild": "^0.21.4",
+    "markdown-it": "^14.1.0"
   },
   "engines": {
     "node": ">=20.6"

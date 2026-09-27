@@ -11,7 +11,7 @@ library(htmltools)
 
 tideData = rtide::tide_height(
   "Casco Bay", #
-  from = Sys.Date()-15, to = Sys.Date()+75,
+  from = Sys.Date()-15, to = Sys.Date()+200,
   minutes = 10L, tz =  "EST5EDT" # "UTC" #
 ) %>%
   tidyr::separate(DateTime, c("date", "time"), sep = " ", remove = F) %>%
