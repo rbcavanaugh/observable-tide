@@ -1,5 +1,4 @@
 library(lubridate)
-library(ggplot2)
 library(rtide)
 library(dplyr)
 library(readr)
